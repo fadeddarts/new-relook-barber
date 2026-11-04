@@ -204,7 +204,7 @@ function Dialog({ preset, onClose }: { preset: string; onClose: () => void }) {
                 onChange={(event) => update("service", event.target.value)}
                 aria-invalid={Boolean(errors.service)}
                 aria-describedby={errors.service ? `${baseId}-service-error` : undefined}
-                className={fieldClass}
+                className={`${fieldClass} scheme-light`}
               >
                 <option value="">Choose a service</option>
                 {services.map((item) => (
@@ -225,7 +225,7 @@ function Dialog({ preset, onClose }: { preset: string; onClose: () => void }) {
                   min={todayValue()}
                   value={form.day}
                   onChange={(event) => update("day", event.target.value)}
-                  className={fieldClass}
+                  className={`${fieldClass} scheme-light`}
                 />
               </label>
               <label className="block" htmlFor={`${baseId}-time`}>
@@ -235,7 +235,7 @@ function Dialog({ preset, onClose }: { preset: string; onClose: () => void }) {
                   name="time"
                   value={form.time}
                   onChange={(event) => update("time", event.target.value)}
-                  className={fieldClass}
+                  className={`${fieldClass} scheme-light`}
                 >
                   <option value="">Flexible</option>
                   {timeOptions.map((slot) => (

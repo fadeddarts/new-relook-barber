@@ -48,6 +48,18 @@ button {
   cursor: pointer;
 }
 
+/* Windows Chrome paints native <select> menus light while inheriting
+   the page's dark color-scheme, which washes out the option text. */
+select {
+  color-scheme: light;
+}
+
+select option,
+select optgroup {
+  color: #111111;
+  background-color: #ffffff;
+}
+
 ::selection {
   background: var(--color-gold);
   color: var(--color-ink);
