@@ -1,8 +1,6 @@
-import { address, brand, email, navLinks, phoneDisplay, phoneHref, week } from "../data"
-import { formatRange } from "../lib/hours"
+import { brand, navLinks, phoneDisplay, phoneHref } from "../data"
 import { BookButton } from "./ui"
 import { Mark } from "./Mark"
-import { SocialLinks } from "./SocialLinks"
 
 const year = new Date().getFullYear()
 
@@ -22,58 +20,28 @@ export function Footer() {
         <p className="type-body mt-8 max-w-md">Your look. Your rules. A barber chair on Eglinton West. Est. 2024.</p>
       </div>
 
-      <div className="mt-12 grid gap-10 border-t border-bone/15 px-5 py-10 sm:grid-cols-2 md:px-10 lg:grid-cols-4">
-        <div>
-          <p className="type-label">Visit</p>
-          <p className="mt-3">
-            {address.street}
-            <br />
-            {address.city}, {address.region} {address.postal}
-          </p>
-          <a href={phoneHref} className="mt-3 block">
-            {phoneDisplay}
-          </a>
-          <a href={`mailto:${email}`} className="mt-1 block break-all">
-            {email}
-          </a>
-        </div>
-        <div>
-          <p className="type-label">Hours</p>
-          <ul className="mt-3">
-            {week.map((day) => (
-              <li key={day.short} className="flex justify-between gap-4 py-1 text-sm">
-                <span>{day.short}</span>
-                <span>{formatRange(day.open, day.close)}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+      <div className="mt-12 flex flex-col gap-8 border-t border-bone/15 px-5 py-10 md:flex-row md:items-end md:justify-between md:px-10">
         <nav aria-label="Footer">
-          <p className="type-label">Index</p>
-          <ul className="mt-3">
+          <ul className="flex flex-wrap gap-x-6 gap-y-2">
             {navLinks.map((link) => (
               <li key={link.id}>
-                <a href={`#${link.id}`} className="inline-block py-1 hover:bg-gold hover:text-ink">
+                <a href={`#${link.id}`} className="type-label inline-block py-1 hover:text-gold">
                   {link.label}
                 </a>
               </li>
             ))}
           </ul>
         </nav>
-        <div>
-          <p className="type-label">Follow</p>
-          <SocialLinks className="mt-4" />
-          <div className="mt-6">
-            <BookButton variant="ink">Book now</BookButton>
-          </div>
-        </div>
+        <BookButton variant="ink">Book now</BookButton>
       </div>
 
       <div className="flex flex-col gap-2 border-t border-bone/15 px-5 py-5 text-sm md:flex-row md:items-center md:justify-between md:px-10">
         <p>
           © {year} {brand.name}
         </p>
-        <p className="type-label">Barber shop · Eglinton West</p>
+        <a href={phoneHref} className="type-label">
+          {phoneDisplay}
+        </a>
       </div>
     </footer>
   )
