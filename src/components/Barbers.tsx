@@ -1,5 +1,6 @@
 import { barber, chairShot } from "../data"
 import { BookButton, Frame, Reveal } from "./ui"
+import { SocialLink } from "./SocialLinks"
 
 export function Barbers() {
   return (
@@ -30,12 +31,9 @@ export function Barbers() {
               <BookButton service="Classic Haircut" variant="gold">
                 Book with Amir
               </BookButton>
-              <a
-                href={barber.instagram}
-                className="type-button inline-flex min-h-12 items-center border border-bone/30 px-5 hover:border-gold hover:bg-gold hover:text-ink"
-              >
+              <SocialLink id="instagram" href={barber.instagram}>
                 {barber.instagramLabel}
-              </a>
+              </SocialLink>
             </div>
           </Reveal>
         </div>

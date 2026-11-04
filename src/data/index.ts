@@ -20,3 +20,4 @@ export {
   tiktokUrl,
   week,
 } from "./shop"
+export type { SocialId } from "./shop"

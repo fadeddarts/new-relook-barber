@@ -6,12 +6,12 @@ import {
   mapEmbedUrl,
   phoneDisplay,
   phoneHref,
-  socials,
   week,
 } from "../data"
 import { formatRange } from "../lib/hours"
 import { useShopStatus } from "../lib/useShopStatus"
 import { BookButton } from "./ui"
+import { SocialLinks } from "./SocialLinks"
 
 export function Visit() {
   const status = useShopStatus()
@@ -69,12 +69,11 @@ export function Visit() {
                 </ul>
               </dd>
             </div>
-            <div className="flex flex-wrap gap-4">
-              {socials.map((social) => (
-                <a key={social.label} href={social.href} className="type-label border-b border-gold pb-1">
-                  {social.label}
-                </a>
-              ))}
+            <div>
+              <dt className="type-label text-concrete">Follow</dt>
+              <dd className="mt-4">
+                <SocialLinks />
+              </dd>
             </div>
           </dl>
         </div>

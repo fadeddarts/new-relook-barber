@@ -44,16 +44,14 @@ export const rating = {
   label: "5.0 from 341 Google reviews",
 }
 
-/**
- * TikTok @new.relook.barber is the public profile.
- * Instagram is listed on Google; confirm the handle before launch.
- */
-export const instagramUrl = "https://www.instagram.com/new.relook.barber/"
+export const instagramUrl = "https://www.instagram.com/new_relook_barbershop/"
 export const tiktokUrl = "https://www.tiktok.com/@new.relook.barber"
 
-export const socials = [
-  { label: "Instagram", href: instagramUrl },
-  { label: "TikTok", href: tiktokUrl },
+export type SocialId = "instagram" | "tiktok"
+
+export const socials: { id: SocialId; label: string; href: string }[] = [
+  { id: "instagram", label: "Instagram", href: instagramUrl },
+  { id: "tiktok", label: "TikTok", href: tiktokUrl },
 ]
 
 export const navLinks = [

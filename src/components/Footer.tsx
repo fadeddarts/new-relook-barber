@@ -1,7 +1,8 @@
-import { address, brand, email, navLinks, phoneDisplay, phoneHref, socials, week } from "../data"
+import { address, brand, email, navLinks, phoneDisplay, phoneHref, week } from "../data"
 import { formatRange } from "../lib/hours"
 import { BookButton } from "./ui"
 import { Mark } from "./Mark"
+import { SocialLinks } from "./SocialLinks"
 
 const year = new Date().getFullYear()
 
@@ -61,15 +62,7 @@ export function Footer() {
         </nav>
         <div>
           <p className="type-label">Follow</p>
-          <ul className="mt-3">
-            {socials.map((social) => (
-              <li key={social.label}>
-                <a href={social.href} className="inline-block py-1 hover:bg-gold hover:text-ink">
-                  {social.label}
-                </a>
-              </li>
-            ))}
-          </ul>
+          <SocialLinks className="mt-4" />
           <div className="mt-6">
             <BookButton variant="ink">Book now</BookButton>
           </div>
