@@ -1,6 +1,6 @@
 import { week, type Weekday } from "../data/shop"
+import { TZ } from "./time.ts"
 
-const TZ = "America/Toronto"
 const order: Weekday[] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 
 export function formatHour(hour: number) {

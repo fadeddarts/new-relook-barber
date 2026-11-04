@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react"
 import { brand, navLinks } from "../data"
-import { useBooking } from "../context/BookingContext"
+import { bookHref, homeHref } from "../lib/route"
 import { useActiveSection } from "../lib/useActiveSection"
 import { trapFocus } from "../lib/focusTrap"
 import { Mark } from "./Mark"
+import { SocialLinks } from "./SocialLinks"
 
-export function Nav() {
+export function Nav({ standalone = false }: { standalone?: boolean }) {
   const active = useActiveSection()
-  const { openBooking } = useBooking()
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
@@ -17,15 +17,14 @@ export function Nav() {
     return trapFocus(node, () => setOpen(false))
   }, [open])
 
-  function book() {
-    setOpen(false)
-    openBooking()
+  function sectionHref(id: string) {
+    return standalone ? homeHref(id) : `#${id}`
   }
 
   return (
     <header className="sticky top-0 z-50 border-b border-bone/15 bg-ink text-bone">
       <div className="mx-auto flex h-[4.25rem] max-w-[1440px] items-center justify-between gap-4 px-5 md:px-10">
-        <a href="#top" className="flex min-w-0 items-center gap-2.5">
+        <a href={standalone ? homeHref() : "#top"} className="flex min-w-0 items-center gap-2.5">
           <Mark className="h-10 w-10 shrink-0" />
           <span className="type-label text-[0.95rem] tracking-[0.14em] whitespace-nowrap">{brand.wordmark}</span>
         </a>
@@ -34,10 +33,10 @@ export function Nav() {
           {navLinks.map((link) => (
             <a
               key={link.id}
-              href={`#${link.id}`}
-              aria-current={active === link.id ? "page" : undefined}
+              href={sectionHref(link.id)}
+              aria-current={!standalone && active === link.id ? "page" : undefined}
               className={`type-label transition-colors duration-200 hover:text-bone ${
-                active === link.id ? "text-bone underline decoration-gold decoration-2 underline-offset-8" : "text-bone/50"
+                !standalone && active === link.id ? "text-bone underline decoration-gold decoration-2 underline-offset-8" : "text-bone/50"
               }`}
             >
               {link.label}
@@ -45,13 +44,14 @@ export function Nav() {
           ))}
         </nav>
 
-        <div className="flex shrink-0 items-center gap-2">
-          <button type="button" onClick={() => openBooking()} className="type-button hidden min-h-11 bg-gold px-4 text-ink sm:inline-flex sm:items-center">
+        <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+          <SocialLinks compact />
+          <a href={bookHref()} className="type-button hidden min-h-11 items-center bg-gold px-4 text-ink sm:inline-flex">
             Book now
-          </button>
-          <button type="button" onClick={() => openBooking()} className="type-button inline-flex min-h-11 items-center bg-gold px-3 text-ink sm:hidden">
+          </a>
+          <a href={bookHref()} className="type-button inline-flex min-h-11 items-center bg-gold px-3 text-ink sm:hidden">
             Book
-          </button>
+          </a>
           <button
             type="button"
             className="type-label inline-flex min-h-11 items-center px-2 min-[1100px]:hidden"
@@ -79,7 +79,7 @@ export function Nav() {
             {navLinks.map((link, index) => (
               <a
                 key={link.id}
-                href={`#${link.id}`}
+                href={sectionHref(link.id)}
                 onClick={() => setOpen(false)}
                 className="type-section border-b border-bone/15 py-3"
               >
@@ -88,10 +88,11 @@ export function Nav() {
               </a>
             ))}
           </nav>
-          <div className="px-5 pt-4 pb-8">
-            <button type="button" onClick={book} className="type-button min-h-14 w-full bg-gold text-ink">
+          <div className="flex items-center justify-between gap-4 px-5 pt-4 pb-8">
+            <SocialLinks compact />
+            <a href={bookHref()} className="type-button inline-flex min-h-14 flex-1 items-center justify-center bg-gold text-ink">
               Book now
-            </button>
+            </a>
           </div>
         </div>
       ) : null}

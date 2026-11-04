@@ -15,5 +15,17 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["vite.config.ts"]
+  "include": [
+    "vite.config.ts",
+    "dev/**/*.ts",
+    "src/lib/time.ts",
+    "src/lib/slots.ts",
+    "src/lib/phone.ts",
+    "src/lib/email.ts",
+    "src/lib/whatsapp.ts",
+    "src/lib/bookingTypes.ts",
+    "src/lib/smsCopy.ts",
+    "src/lib/emailCopy.ts",
+    "src/data/shop.ts"
+  ]
 }

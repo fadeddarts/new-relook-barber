@@ -2,7 +2,6 @@ import {
   address,
   addressLine,
   directionsUrl,
-  email,
   mapEmbedUrl,
   phoneDisplay,
   phoneHref,
@@ -43,13 +42,10 @@ export function Visit() {
               </dd>
             </div>
             <div>
-              <dt className="type-label text-concrete">Call or write</dt>
-              <dd className="mt-2 flex flex-col items-start gap-1">
+              <dt className="type-label text-concrete">Call</dt>
+              <dd className="mt-2">
                 <a href={phoneHref} className="type-sub">
                   {phoneDisplay}
-                </a>
-                <a href={`mailto:${email}`} className="text-bone/80 underline decoration-gold underline-offset-4">
-                  {email}
                 </a>
               </dd>
             </div>

@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en-CA">
+  <head>
+    <meta charset="utf-8" />
+    <title>New Relook Barber shop</title>
+    <script>
+      sessionStorage.setItem("nr-path", location.pathname + location.search + location.hash)
+      var parts = location.pathname.split("/").filter(Boolean)
+      var cut = parts.findIndex(function (part) {
+        return part === "book" || part === "board" || part === "cancel"
+      })
+      var base = cut > 0 ? "/" + parts.slice(0, cut).join("/") + "/" : "/"
+      location.replace(base)
+    </script>
+  </head>
+  <body></body>
+</html>

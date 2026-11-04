@@ -1,6 +1,6 @@
 import { useReducedMotion, motion } from "framer-motion"
 import type { ReactNode } from "react"
-import { useBooking } from "../context/BookingContext"
+import { bookHref } from "../lib/route"
 
 const ease = [0.16, 1, 0.3, 1] as const
 
@@ -66,14 +66,12 @@ export function BookButton({
   variant?: keyof typeof buttonStyles
   className?: string
 }) {
-  const { openBooking } = useBooking()
   return (
-    <button
-      type="button"
-      onClick={() => openBooking(service)}
+    <a
+      href={bookHref(service)}
       className={`type-button inline-flex min-h-12 items-center justify-center px-5 transition-colors duration-200 ${buttonStyles[variant]} ${className}`}
     >
       {children}
-    </button>
+    </a>
   )
 }

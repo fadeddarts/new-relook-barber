@@ -13,7 +13,13 @@ export const brand = {
 export const phoneDisplay = "(647) 222-3540"
 export const phoneHref = "tel:+16472223540"
 export const smsHref = "sms:+16472223540"
-export const email = "newrelook3@gmail.com"
+export const phoneE164 = "+16472223540"
+export const whatsappDigits = "16472223540"
+
+/** Test inbox for booking WhatsApp notices. Shop Call still uses phoneDisplay. */
+export const notifyPhoneDisplay = "(647) 686-0975"
+export const notifyPhoneE164 = "+16476860975"
+export const notifyWhatsappDigits = "16476860975"
 
 export const address = {
   street: "1054 Eglinton Ave W",
