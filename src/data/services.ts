@@ -1,7 +1,5 @@
 /**
- * Prices that are numbers were supplied for the site.
- * Taper Fade and Complete Transformation have no published price.
- * Beard Trim uses the shop's published beard price of $25.
+ * Menu copied from the shop price list: name and dollar price, plus tax.
  */
 
 export type Service = {
@@ -9,46 +7,22 @@ export type Service = {
   index: string
   name: string
   description: string
-  minutes: number | null
-  price: number | null
+  minutes: number
+  price: number
 }
 
 export const services: Service[] = [
   {
-    id: "classic",
+    id: "haircut",
     index: "01",
-    name: "Classic Haircut",
+    name: "Haircut",
     description: "A clean shape, sides set, top left with enough length to wear your way.",
     minutes: 40,
     price: 35,
   },
   {
-    id: "skin-fade",
-    index: "02",
-    name: "Skin Fade",
-    description: "Blended down to the skin. The top still has a shape by Thursday.",
-    minutes: 45,
-    price: 40,
-  },
-  {
-    id: "taper",
-    index: "03",
-    name: "Taper Fade",
-    description: "A shorter neck and side that keeps a little weight. No published price yet.",
-    minutes: null,
-    price: null,
-  },
-  {
-    id: "scissor",
-    index: "04",
-    name: "Scissor Cut",
-    description: "Cut with shears so the hair keeps its movement instead of a clipped edge.",
-    minutes: 50,
-    price: 40,
-  },
-  {
     id: "beard",
-    index: "05",
+    index: "02",
     name: "Beard Trim",
     description: "Cheek, neck, and length brought to one line. Sharp enough to read.",
     minutes: 20,
@@ -56,26 +30,58 @@ export const services: Service[] = [
   },
   {
     id: "cut-and-beard",
-    index: "06",
+    index: "03",
     name: "Haircut & Beard",
     description: "The cut and the beard finished together, so they belong to the same face.",
-    minutes: 70,
+    minutes: 60,
     price: 55,
   },
   {
-    id: "transformation",
+    id: "neck",
+    index: "04",
+    name: "Neck Trim",
+    description: "The neckline cleaned up without a full haircut.",
+    minutes: 15,
+    price: 20,
+  },
+  {
+    id: "towel-mask",
+    index: "05",
+    name: "Hot Towel with Face Mask",
+    description: "A hot towel and a face mask at the chair.",
+    minutes: 15,
+    price: 10,
+  },
+  {
+    id: "towel",
+    index: "06",
+    name: "Hot Towel Only",
+    description: "A hot towel at the chair, on its own.",
+    minutes: 10,
+    price: 5,
+  },
+  {
+    id: "wash",
     index: "07",
-    name: "Complete Transformation",
-    description: "A full reset of the cut and the beard. The price is confirmed when you book.",
-    minutes: null,
-    price: null,
+    name: "Hair Wash",
+    description: "A wash before the cut, or on its own.",
+    minutes: 15,
+    price: 10,
+  },
+  {
+    id: "waxing",
+    index: "08",
+    name: "Nose & Ear Waxing",
+    description: "A quick clean-up. Nose and ears.",
+    minutes: 10,
+    price: 10,
   },
 ]
 
-export function priceLabel(price: number | null) {
-  return price === null ? "Price on request" : `$${price}`
+export function priceLabel(price: number) {
+  return `$${price}`
 }
 
-export function timeLabel(minutes: number | null) {
-  return minutes === null ? "Time on request" : `${minutes} min`
+export function timeLabel(minutes: number) {
+  return `${minutes} min`
 }

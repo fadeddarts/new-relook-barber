@@ -11,7 +11,7 @@ export function Services() {
             <h2 className="type-section mt-3">The menu.</h2>
           </div>
           <p className="type-body max-w-sm text-bone/70">
-            Prices in Canadian dollars. Two services are still quoted by phone. Sunday chairs finish at 6 p.m.
+            Prices in Canadian dollars, plus tax. Sunday chairs finish at 6 p.m.
           </p>
         </Reveal>
 
@@ -22,14 +22,11 @@ export function Services() {
                 <p className="order-1 bg-gold px-2 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-none tracking-[-0.04em] text-ink">
                   {service.index}
                 </p>
-                <p
-                  className={`order-2 md:order-3 ${
-                    service.price === null
-                      ? "type-label max-w-[10rem] text-right"
-                      : "font-display text-[clamp(1.7rem,3vw,2.6rem)] leading-none tracking-[-0.04em]"
-                  }`}
-                >
-                  {priceLabel(service.price)}
+                <p className="order-2 flex items-baseline gap-2 md:order-3">
+                  <span className="font-display text-[clamp(1.7rem,3vw,2.6rem)] leading-none tracking-[-0.04em]">
+                    {priceLabel(service.price)}
+                  </span>
+                  <span className="type-label text-bone/50">+ tax</span>
                 </p>
                 <h3 className="type-sub order-3 w-full md:order-2 md:w-auto md:min-w-0 md:flex-1">
                   {service.name}

@@ -28,7 +28,7 @@ export function Barbers() {
             <p className="type-body max-w-md text-bone/85">{barber.intro}</p>
             <p className="type-label mt-6 text-concrete">Photograph is a stand-in, not a portrait of Amir.</p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <BookButton service="Classic Haircut" variant="gold">
+              <BookButton service="Haircut" variant="gold">
                 Book with Amir
               </BookButton>
               <SocialLink id="instagram" href={barber.instagram}>
