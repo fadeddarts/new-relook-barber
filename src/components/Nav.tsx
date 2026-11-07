@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { brand, navLinks } from "../data"
-import { bookHref, homeHref } from "../lib/route"
+import { boardHref, bookHref, homeHref } from "../lib/route"
 import { useActiveSection } from "../lib/useActiveSection"
 import { trapFocus } from "../lib/focusTrap"
 import { Mark } from "./Mark"
@@ -46,6 +46,12 @@ export function Nav({ standalone = false }: { standalone?: boolean }) {
 
         <div className="flex shrink-0 items-center gap-1 sm:gap-2">
           <SocialLinks compact />
+          <a
+            href={boardHref()}
+            className="type-label inline-flex min-h-11 items-center px-2 text-bone/50 transition-colors duration-200 hover:text-bone"
+          >
+            Staff login
+          </a>
           <a href={bookHref()} className="type-button hidden min-h-11 items-center bg-gold px-4 text-ink sm:inline-flex">
             Book now
           </a>
@@ -87,6 +93,10 @@ export function Nav({ standalone = false }: { standalone?: boolean }) {
                 {link.label}
               </a>
             ))}
+            <a href={boardHref()} onClick={() => setOpen(false)} className="type-section border-b border-bone/15 py-3">
+              <span className="mr-4 text-gold">{String(navLinks.length + 1).padStart(2, "0")}</span>
+              Staff login
+            </a>
           </nav>
           <div className="flex items-center justify-between gap-4 px-5 pt-4 pb-8">
             <SocialLinks compact />

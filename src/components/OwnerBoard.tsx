@@ -61,11 +61,11 @@ export function OwnerBoard() {
   const [busy, setBusy] = useState(false)
 
   useEffect(() => {
-    document.title = `Board — ${brand.name}`
+    document.title = authed ? `Board — ${brand.name}` : `Staff login — ${brand.name}`
     return () => {
       document.title = `${brand.name} — Eglinton West, Toronto`
     }
-  }, [])
+  }, [authed])
 
   useEffect(() => {
     if (!authed) return
@@ -174,18 +174,17 @@ export function OwnerBoard() {
       <div className="min-h-svh bg-ink text-bone">
         <Nav standalone />
         <main className="mx-auto max-w-sm px-5 py-12">
-          <p className="type-label">Shop board</p>
+          <p className="type-label">Staff</p>
           <h1 className="mt-2 font-display text-[clamp(1.85rem,4vw,2.75rem)] leading-[0.95] font-bold tracking-[-0.04em] uppercase">
-            PIN
+            Staff login
           </h1>
-          <p className="mt-3 text-sm leading-relaxed text-bone/70">
-            After you reply on WhatsApp, mark the chair here. That is what takes the time off the public booker.
-          </p>
+          <p className="mt-3 text-sm leading-relaxed text-bone/70">Enter the PIN.</p>
           <form className="mt-8" onSubmit={login}>
             <label className="block" htmlFor={`${baseId}-pin`}>
               <span className="type-label">PIN</span>
               <input
                 id={`${baseId}-pin`}
+                type="password"
                 className={fieldClass}
                 value={pin}
                 onChange={(event) => setPin(event.target.value)}
@@ -200,7 +199,7 @@ export function OwnerBoard() {
               disabled={busy}
               className="type-button mt-8 inline-flex h-11 w-full items-center justify-center bg-gold text-ink"
             >
-              Open board
+              Log in
             </button>
           </form>
         </main>

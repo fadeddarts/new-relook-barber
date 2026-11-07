@@ -33,6 +33,10 @@ export function bookHref(service?: string) {
   return `${path}?service=${encodeURIComponent(service)}`
 }
 
+export function boardHref() {
+  return hrefFor("board")
+}
+
 export function homeHref(hash?: string) {
   const home = hrefFor("")
   if (!hash) return home
