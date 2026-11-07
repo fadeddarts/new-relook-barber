@@ -23,7 +23,6 @@ export function BookPage() {
   const [date, setDate] = useState(firstBookableDate)
   const [startMinute, setStartMinute] = useState<number | null>(null)
   const [slots, setSlots] = useState<SlotOpen[]>([])
-  const [capacity, setCapacity] = useState(2)
   const [name, setName] = useState("")
   const [errors, setErrors] = useState<{ name?: string; time?: string; form?: string }>({})
   const [loadingTimes, setLoadingTimes] = useState(false)
@@ -42,7 +41,6 @@ export function BookPage() {
       try {
         const day = await fetchDay(date)
         if (cancelled) return
-        setCapacity(day.capacity)
         const raw = duration === 30 ? day.slots30 ?? day.starts30.map((minute) => ({ minute, open: day.capacity })) : day.slots60 ?? day.starts60.map((minute) => ({ minute, open: day.capacity }))
         const next = raw.filter((slot) => slot.open > 0)
         setSlots(next)
