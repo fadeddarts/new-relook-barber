@@ -16,10 +16,10 @@ export const smsHref = "sms:+16472223540"
 export const phoneE164 = "+16472223540"
 export const whatsappDigits = "16472223540"
 
-/** Test inbox for booking WhatsApp notices. Shop Call still uses phoneDisplay. */
-export const notifyPhoneDisplay = "(647) 686-0975"
-export const notifyPhoneE164 = "+16476860975"
-export const notifyWhatsappDigits = "16476860975"
+/** Booking WhatsApp goes to the shop number. */
+export const notifyPhoneDisplay = "(647) 222-3540"
+export const notifyPhoneE164 = "+16472223540"
+export const notifyWhatsappDigits = "16472223540"
 
 export const address = {
   street: "1054 Eglinton Ave W",
