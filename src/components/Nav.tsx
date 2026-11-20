@@ -24,21 +24,21 @@ export function Nav({ standalone = false }: { standalone?: boolean }) {
 
   return (
     <header className="sticky top-0 z-50 border-b border-bone/15 bg-ink text-bone">
-      <div className="mx-auto flex h-[4.25rem] max-w-[1440px] items-center justify-between gap-3 px-4 sm:gap-4 sm:px-5 md:px-10">
-        <a href={standalone ? homeHref() : "#top"} className="flex min-w-0 items-center gap-2">
+      <div className="mx-auto grid h-[4.25rem] max-w-[1440px] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-5 px-4 sm:gap-6 sm:px-5 md:gap-8 md:px-10 xl:gap-10">
+        <a href={standalone ? homeHref() : "#top"} className="col-start-1 flex items-center gap-2.5">
           <Mark className="h-9 w-9 shrink-0 sm:h-10 sm:w-10" />
           <span className="type-label hidden text-[0.95rem] tracking-[0.14em] whitespace-nowrap lg:inline">
             {brand.wordmark}
           </span>
         </a>
 
-        <nav className="hidden items-center gap-7 min-[1100px]:flex" aria-label="Primary">
+        <nav className="col-start-2 hidden min-w-0 items-center justify-center gap-x-5 min-[1100px]:flex xl:gap-x-8" aria-label="Primary">
           {navLinks.map((link) => (
             <a
               key={link.id}
               href={sectionHref(link.id)}
               aria-current={!standalone && active === link.id ? "page" : undefined}
-              className={`type-label transition-colors duration-200 hover:text-bone ${
+              className={`type-label shrink-0 whitespace-nowrap transition-colors duration-200 hover:text-bone ${
                 !standalone && active === link.id ? "text-bone underline decoration-gold decoration-2 underline-offset-8" : "text-bone/50"
               }`}
             >
@@ -47,15 +47,15 @@ export function Nav({ standalone = false }: { standalone?: boolean }) {
           ))}
         </nav>
 
-        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-          <SocialLinks compact className="hidden min-[1100px]:flex" />
+        <div className="col-start-3 flex shrink-0 items-center justify-self-end gap-2 sm:gap-3">
+          <SocialLinks compact className="hidden xl:flex" />
           <ThemeToggle />
           <a
             href={boardHref()}
             className="type-label hidden min-h-11 items-center px-2 text-bone/50 transition-colors duration-200 hover:text-bone sm:inline-flex"
           >
-            <span className="md:hidden">Staff</span>
-            <span className="hidden md:inline">Staff login</span>
+            <span className="xl:hidden">Staff</span>
+            <span className="hidden xl:inline">Staff login</span>
           </a>
           <a href={bookHref()} className="type-button hidden min-h-11 items-center bg-gold px-4 text-ink lg:inline-flex">
             Book now
@@ -78,8 +78,8 @@ export function Nav({ standalone = false }: { standalone?: boolean }) {
 
       {open ? (
         <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="Menu" className="fixed inset-0 z-[60] flex flex-col bg-ink text-bone">
-          <div className="mx-auto flex h-[4.25rem] w-full max-w-[1440px] items-center justify-between gap-3 border-b border-bone/20 px-4 sm:gap-4 sm:px-5 md:px-10">
-            <p className="flex min-w-0 items-center gap-2">
+          <div className="mx-auto flex h-[4.25rem] w-full max-w-[1440px] items-center justify-between gap-5 border-b border-bone/20 px-4 sm:gap-6 sm:px-5 md:gap-8 md:px-10">
+            <p className="flex items-center gap-2.5">
               <Mark className="h-9 w-9 shrink-0 sm:h-10 sm:w-10" />
               <span className="type-label hidden text-[0.95rem] tracking-[0.14em] whitespace-nowrap lg:inline">
                 {brand.wordmark}
@@ -91,8 +91,8 @@ export function Nav({ standalone = false }: { standalone?: boolean }) {
                 href={boardHref()}
                 className="type-label hidden min-h-11 items-center px-2 text-bone/50 transition-colors duration-200 hover:text-bone sm:inline-flex"
               >
-                <span className="md:hidden">Staff</span>
-                <span className="hidden md:inline">Staff login</span>
+                <span className="xl:hidden">Staff</span>
+                <span className="hidden xl:inline">Staff login</span>
               </a>
               <a href={bookHref()} className="type-button hidden min-h-11 items-center bg-gold px-4 text-ink lg:inline-flex">
                 Book now
