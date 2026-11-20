@@ -12,11 +12,11 @@ import {
   services,
   timeLabel,
 } from "../data"
-import { BookingError, fetchDay } from "../lib/bookingClient"
+import { fetchDay } from "../lib/bookingClient"
 import { durationForServices } from "../lib/estimates"
-import { cancelHref } from "../lib/route"
+import { hoursAsOpenSlots } from "../lib/slots"
 import { WAIT_DISCLAIMER, bookableDates, firstBookableDate, formatClock } from "../lib/time"
-import type { SlotOpen } from "../lib/bookingTypes"
+import type { DayAvailability, SlotOpen } from "../lib/bookingTypes"
 import { bookingWhatsAppText, shopWhatsAppUrl } from "../lib/whatsapp"
 import { DateStrip } from "./DateStrip"
 import { Nav } from "./Nav"
@@ -31,6 +31,14 @@ function presetService() {
   return new URLSearchParams(window.location.search).get("service")
 }
 
+function openSlotsFromDay(day: DayAvailability, duration: 30 | 60) {
+  const raw =
+    duration === 30
+      ? (day.slots30 ?? day.starts30.map((minute) => ({ minute, open: day.capacity })))
+      : (day.slots60 ?? day.starts60.map((minute) => ({ minute, open: day.capacity })))
+  return raw.filter((slot) => slot.open > 0)
+}
+
 export function BookPage() {
   const baseId = useId()
   const dates = bookableDates()
@@ -40,7 +48,6 @@ export function BookPage() {
   const [slots, setSlots] = useState<SlotOpen[]>([])
   const [name, setName] = useState("")
   const [errors, setErrors] = useState<{ name?: string; service?: string; time?: string; form?: string }>({})
-  const [loadingTimes, setLoadingTimes] = useState(false)
 
   const picked = findServices(serviceNames)
   const duration = durationForServices(picked.map((item) => item.name))
@@ -57,34 +64,32 @@ export function BookPage() {
     if (picked.length === 0) {
       setSlots([])
       setStartMinute(null)
-      setLoadingTimes(false)
       return
     }
+    const local = hoursAsOpenSlots(date, duration)
+    setSlots(local)
+    setStartMinute((current) => (current !== null && local.some((slot) => slot.minute === current) ? current : null))
+
     let cancelled = false
+    let useBoard = true
+
     async function load() {
-      setLoadingTimes(true)
+      if (!useBoard) return
       try {
         const day = await fetchDay(date)
         if (cancelled) return
-        const raw =
-          duration === 30
-            ? (day.slots30 ?? day.starts30.map((minute) => ({ minute, open: day.capacity })))
-            : (day.slots60 ?? day.starts60.map((minute) => ({ minute, open: day.capacity })))
-        const next = raw.filter((slot) => slot.open > 0)
-        setSlots(next)
-        setStartMinute((current) => (current !== null && next.some((slot) => slot.minute === current) ? current : null))
-        setErrors((current) => ({ ...current, form: undefined }))
-      } catch (error) {
+        applySlots(openSlotsFromDay(day, duration))
+      } catch {
+        useBoard = false
         if (cancelled) return
-        setSlots([])
-        setStartMinute(null)
-        setErrors((current) => ({
-          ...current,
-          form: error instanceof BookingError ? error.message : "Could not load times. Call the shop.",
-        }))
-      } finally {
-        if (!cancelled) setLoadingTimes(false)
+        applySlots(local)
       }
+    }
+
+    function applySlots(next: SlotOpen[]) {
+      setSlots(next)
+      setStartMinute((current) => (current !== null && next.some((slot) => slot.minute === current) ? current : null))
+      setErrors((current) => ({ ...current, form: undefined }))
     }
     void load()
     const timer = window.setInterval(() => void load(), 2000)
@@ -249,10 +254,8 @@ export function BookPage() {
             <p className="type-label">Open times</p>
             {picked.length === 0 ? (
               <p className="mt-2 text-sm text-bone/65">Pick a service to see open times.</p>
-            ) : loadingTimes && slots.length === 0 ? (
-              <p className="mt-2 text-sm text-bone/65">Checking the board…</p>
             ) : slots.length === 0 ? (
-              <p className="mt-2 text-sm text-bone/65">No times left this day. Try another day or call.</p>
+              <p className="mt-2 text-sm text-bone/65">No open times left this day. Please pick another day, or call.</p>
             ) : (
               <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-4">
                 {slots.map((slot) => {
@@ -297,17 +300,14 @@ export function BookPage() {
             </button>
           )}
           <a
-            href={cancelHref()}
-            className="type-button inline-flex h-12 w-full items-center justify-center border border-bone/25 px-5"
-          >
-            Cancel on WhatsApp
-          </a>
-          <a
             href={phoneHref}
             className="type-button inline-flex h-12 w-full items-center justify-center border border-bone/25 px-5"
           >
             Call {phoneDisplay}
           </a>
+          <p className="text-sm leading-relaxed text-bone/65">
+            Need to cancel? Send the shop a WhatsApp.
+          </p>
         </form>
       </main>
     </div>

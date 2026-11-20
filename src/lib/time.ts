@@ -62,17 +62,25 @@ export function diffDays(from: string, to: string) {
   return Math.round((b - a) / 86_400_000)
 }
 
+export function dateHasOpenTime(date: string, now = new Date(), durationMin = SLOT_MINUTES) {
+  const { openMinute, closeMinute } = hoursForDate(date)
+  const last = closeMinute - durationMin
+  if (last < openMinute) return false
+  for (let minute = openMinute; minute <= last; minute += SLOT_MINUTES) {
+    if (!hasStarted(date, minute, now)) return true
+  }
+  return false
+}
+
 export function bookableDates(now = new Date()) {
   const today = torontoDateString(now)
-  return Array.from({ length: BOOKING_HORIZON_DAYS }, (_, index) => addDays(today, index))
+  return Array.from({ length: BOOKING_HORIZON_DAYS }, (_, index) => addDays(today, index)).filter((date) =>
+    dateHasOpenTime(date, now),
+  )
 }
 
 export function firstBookableDate(now = new Date()) {
-  const dates = bookableDates(now)
-  const today = dates[0]
-  if (!today) return ""
-  if (torontoMinutes(now) >= hoursForDate(today).closeMinute) return dates[1] ?? today
-  return today
+  return bookableDates(now)[0] ?? ""
 }
 
 export function formatClock(minutes: number) {

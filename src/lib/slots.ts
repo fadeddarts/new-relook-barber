@@ -1,5 +1,5 @@
 import { DEFAULT_CAPACITY, SLOT_MINUTES, hasStarted, hoursForDate } from "./time.ts"
-import type { DurationMin, OccupancyRow } from "./bookingTypes.ts"
+import type { DurationMin, OccupancyRow, SlotOpen } from "./bookingTypes.ts"
 
 export function chairFree(
   occupancy: OccupancyRow[],
@@ -50,6 +50,13 @@ export function startMinutesFor(date: string, durationMin: DurationMin) {
   const starts: number[] = []
   for (let minute = openMinute; minute <= last; minute += SLOT_MINUTES) starts.push(minute)
   return starts
+}
+
+/** Shop hours with every chair still free. Used when the live board API is not reachable. */
+export function hoursAsOpenSlots(date: string, durationMin: DurationMin, now = new Date()): SlotOpen[] {
+  return startMinutesFor(date, durationMin)
+    .filter((minute) => !hasStarted(date, minute, now))
+    .map((minute) => ({ minute, open: DEFAULT_CAPACITY }))
 }
 
 export function availableStarts(
