@@ -6,10 +6,18 @@
     <link rel="apple-touch-icon" href="/logo-mark.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#111111" />
+    <script>
+      try {
+        if (localStorage.getItem("nr-theme") === "light") {
+          document.documentElement.classList.add("light")
+          document.documentElement.style.colorScheme = "light"
+        }
+      } catch (e) {}
+    </script>
     <title>New Relook Barber shop — Eglinton West, Toronto</title>
     <meta
       name="description"
-      content="New Relook Barber shop, 1054 Eglinton Ave W, Toronto. Fades, scissor cuts, and beard work. Your look. Your rules. Book a chair or call (647) 222-3540."
+      content="New Relook Barber shop, 1054 Eglinton Ave W, Toronto. Fades, scissor cuts, and beard work. Your look. Your rules. Book an appointment or call (647) 222-3540."
     />
     <meta name="author" content="New Relook Barber shop" />
     <meta property="og:title" content="New Relook Barber shop — Eglinton West" />

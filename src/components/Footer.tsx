@@ -17,7 +17,7 @@ export function Footer() {
           </p>
         </div>
         <div className="mt-6 h-3 bg-gold" />
-        <p className="type-body mt-8 max-w-md">Your look. Your rules. A barber chair on Eglinton West. Est. 2024.</p>
+        <p className="type-body mt-8 max-w-md">Your look. Your rules. A barber chair on Eglinton West.</p>
       </div>
 
       <div className="mt-12 flex flex-col gap-8 border-t border-bone/15 px-5 py-10 md:flex-row md:items-end md:justify-between md:px-10">

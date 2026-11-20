@@ -37,6 +37,10 @@ export function boardHref() {
   return hrefFor("board")
 }
 
+export function boardGuideHref() {
+  return hrefFor("board-guide.html")
+}
+
 export function homeHref(hash?: string) {
   const home = hrefFor("")
   if (!hash) return home

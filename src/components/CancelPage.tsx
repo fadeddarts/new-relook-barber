@@ -39,8 +39,8 @@ export function CancelPage() {
         <p className="type-label">Cancel</p>
         <h1 className="type-section mt-3">Drop a time.</h1>
         <p className="mt-4 text-sm leading-relaxed text-bone/70">
-          Send a WhatsApp to {notifyPhoneDisplay}. That message is the cancel. The shop will free the chair on the
-          board. {WAIT_DISCLAIMER}
+          Send a WhatsApp to {notifyPhoneDisplay}. That message is the cancel. The shop will take the appointment
+          off the board. {WAIT_DISCLAIMER}
         </p>
 
         <div className="mt-8 grid gap-6">

@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en-CA">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>How to use the shop board — New Relook</title>
+    <style>
+      :root {
+        --ink: #111;
+        --bone: #f1efe8;
+        --gold: #c49a3c;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bone);
+        color: var(--ink);
+        font: 16px/1.5 "Archivo", "Avenir Next", "Segoe UI", sans-serif;
+      }
+      main {
+        max-width: 40rem;
+        margin: 0 auto;
+        padding: 2rem 1.25rem 4rem;
+      }
+      p.kicker {
+        font: 600 0.72rem/1.3 "Space Grotesk", "Avenir Next", sans-serif;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #6b6860;
+      }
+      h1 {
+        font: 700 2rem/1.05 "Space Grotesk", "Avenir Next", sans-serif;
+        letter-spacing: -0.04em;
+        text-transform: uppercase;
+        margin: 0.4rem 0 1rem;
+      }
+      h2 {
+        font: 700 1.05rem/1.2 "Space Grotesk", "Avenir Next", sans-serif;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin: 2rem 0 0.6rem;
+      }
+      ol {
+        padding-left: 1.25rem;
+      }
+      li {
+        margin: 0.4rem 0;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin: 1.5rem 0 2rem;
+      }
+      a.btn,
+      button.btn {
+        display: inline-flex;
+        align-items: center;
+        min-height: 2.75rem;
+        padding: 0 1rem;
+        border: 0;
+        background: var(--gold);
+        color: var(--ink);
+        font: 700 0.78rem/1 "Space Grotesk", "Avenir Next", sans-serif;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      a.ghost {
+        display: inline-flex;
+        align-items: center;
+        min-height: 2.75rem;
+        color: var(--ink);
+      }
+      .note {
+        border-left: 3px solid var(--gold);
+        padding: 0.2rem 0 0.2rem 0.9rem;
+        color: #444;
+      }
+      @media print {
+        .actions {
+          display: none;
+        }
+        body {
+          background: white;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="kicker">New Relook · Staff</p>
+      <h1>How to use the board</h1>
+      <p>
+        Customers book an appointment, not a chair. They pick a time on the website, then send WhatsApp.
+        Nothing is held until you reply OK and add the name here.
+      </p>
+      <div class="actions">
+        <button class="btn" type="button" onclick="window.print()">Save as PDF</button>
+        <a class="ghost" href="board">Open the board</a>
+      </div>
+
+      <h2>1. Open Staff login</h2>
+      <p>
+        On the website tap <strong>Staff login</strong> (on a phone it is inside Menu). Type the PIN you
+        were given. The PIN is not on the public site.
+      </p>
+
+      <h2>2. When a WhatsApp comes in</h2>
+      <ol>
+        <li>Read the name, day, time, and 30 or 60 minutes.</li>
+        <li>If that time still works, reply OK on WhatsApp.</li>
+        <li>On the board: pick how long, pick the day, pick the time, type the name, tap <strong>Add to board</strong>.</li>
+      </ol>
+      <p class="note">Walk-ins: leave the name as Walk-in, pick the time, add them.</p>
+
+      <h2>3. What the customer sees</h2>
+      <p>
+        Book only shows times that still have room. When every opening at that time is filled, the time
+        disappears from Book. Two people can still WhatsApp the same slot until you fill it.
+      </p>
+
+      <h2>4. How many we can take</h2>
+      <p>
+        Default is 2. Use + / − if only one barber is in, or if a third is working that day (max 4).
+      </p>
+
+      <h2>5. Cancel</h2>
+      <p>
+        Customer sends a cancel WhatsApp. You tap <strong>Remove</strong> on that name. The time opens
+        on Book again.
+      </p>
+
+      <h2>6. Sign out</h2>
+      <p>
+        Tap Logout when you are done. The board also signs out after 30 minutes with no tap or key.
+        You will need the PIN again.
+      </p>
+
+      <h2>Phone, tablet, computer</h2>
+      <p>
+        Portrait: the form stacks so the times stay large. Landscape: times on the left, name and list
+        on the right. Light / Dark is in the top bar.
+      </p>
+    </main>
+  </body>
+</html>

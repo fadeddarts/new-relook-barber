@@ -21,7 +21,7 @@ export function Shop() {
           </Reveal>
         </div>
         <Frame className="lg:col-span-7">
-          <div className="aspect-[4/3] lg:aspect-auto lg:h-full lg:min-h-[520px]">
+          <div className="aspect-[4/3]">
             <img
               src={toolsShot.src}
               alt={toolsShot.alt}

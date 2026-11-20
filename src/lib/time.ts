@@ -5,7 +5,8 @@ export const BOOKING_HORIZON_DAYS = 14
 export const DEFAULT_CAPACITY = 2
 export const MAX_CAPACITY = 4
 export const SLOT_MINUTES = 30
-export const WAIT_DISCLAIMER = "Times are a start window. You may wait up to 15 minutes."
+export const WAIT_DISCLAIMER =
+  "Please allow up to 15 minutes after your booked time. Thank you for your patience."
 
 const weekdayOrder: Weekday[] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 

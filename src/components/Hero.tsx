@@ -11,8 +11,8 @@ export function Hero() {
 
   return (
     <section id="top" className="border-b border-bone/15 bg-ink text-bone">
-      <div className="grid lg:min-h-[calc(100svh-4.25rem)] lg:grid-cols-12">
-        <div className="relative order-1 min-h-[42svh] border-b-[12px] border-gold lg:order-2 lg:col-span-5 lg:min-h-0 lg:border-b-0 lg:border-l-[12px]">
+      <div className="grid lg:grid-cols-12">
+        <div className="relative order-1 aspect-[4/5] border-b-[12px] border-gold sm:aspect-[5/4] lg:order-2 lg:col-span-5 lg:aspect-[4/5] lg:border-b-0 lg:border-l-[12px]">
           <img
             src={heroShot.src}
             alt={heroShot.alt}
@@ -22,14 +22,11 @@ export function Hero() {
             decoding="async"
             className={`absolute inset-0 h-full w-full object-cover ${heroShot.position ?? ""}`}
           />
-          <Mark labelled className="absolute right-4 bottom-4 h-[4.5rem] w-[4.5rem] lg:right-6 lg:bottom-6 lg:h-24 lg:w-24" />
+          <Mark labelled className="absolute right-4 bottom-4 h-16 w-16 lg:right-6 lg:bottom-6 lg:h-20 lg:w-20" />
         </div>
 
         <div className="order-2 flex flex-col justify-between gap-8 px-5 py-8 md:px-10 lg:order-1 lg:col-span-7 lg:py-12">
-          <div className="flex items-center justify-between gap-4">
-            <p className="type-label">Toronto · Eglinton West</p>
-            <p className="type-label">Est. 2024</p>
-          </div>
+          <p className="type-label">Toronto · Eglinton West</p>
 
           <h1 className="type-display">
             {lines.map((line, index) => (

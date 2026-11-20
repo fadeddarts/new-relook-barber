@@ -8,6 +8,7 @@ export type Service = {
   name: string
   description: string
   minutes: number
+  time?: string
   price: number
 }
 
@@ -17,7 +18,8 @@ export const services: Service[] = [
     index: "01",
     name: "Haircut",
     description: "A clean shape, sides set, top left with enough length to wear your way.",
-    minutes: 40,
+    minutes: 30,
+    time: "20–30 min",
     price: 35,
   },
   {
@@ -26,6 +28,7 @@ export const services: Service[] = [
     name: "Beard Trim",
     description: "Cheek, neck, and length brought to one line. Sharp enough to read.",
     minutes: 20,
+    time: "15–20 min",
     price: 25,
   },
   {
@@ -34,6 +37,7 @@ export const services: Service[] = [
     name: "Haircut & Beard",
     description: "The cut and the beard finished together, so they belong to the same face.",
     minutes: 60,
+    time: "45–60 min",
     price: 55,
   },
   {
@@ -41,7 +45,8 @@ export const services: Service[] = [
     index: "04",
     name: "Neck Trim",
     description: "The neckline cleaned up without a full haircut.",
-    minutes: 15,
+    minutes: 20,
+    time: "15–20 min",
     price: 20,
   },
   {
@@ -66,6 +71,7 @@ export const services: Service[] = [
     name: "Hair Wash",
     description: "A wash before the cut, or on its own.",
     minutes: 15,
+    time: "15 min",
     price: 10,
   },
   {
@@ -74,6 +80,7 @@ export const services: Service[] = [
     name: "Nose & Ear Waxing",
     description: "A quick clean-up. Nose and ears.",
     minutes: 10,
+    time: "10 min",
     price: 10,
   },
 ]
@@ -82,6 +89,20 @@ export function priceLabel(price: number) {
   return `$${price}`
 }
 
-export function timeLabel(minutes: number) {
-  return `${minutes} min`
+export function timeLabel(service: Service) {
+  return service.time ?? null
+}
+
+export const MAX_BOOKING_SERVICES = 3
+
+export function findService(value: string | null | undefined) {
+  if (!value) return null
+  const decoded = decodeURIComponent(value).trim().toLowerCase()
+  return (
+    services.find((item) => item.name.toLowerCase() === decoded || item.id.toLowerCase() === decoded) ?? null
+  )
+}
+
+export function findServices(names: string[]) {
+  return names.map((name) => findService(name)).filter((item): item is Service => Boolean(item))
 }

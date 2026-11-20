@@ -17,12 +17,12 @@ export function Visit() {
 
   return (
     <section id="contact" className="bg-ink text-bone">
-      <div className="grid lg:grid-cols-12">
-        <div className="px-5 py-14 md:px-10 lg:col-span-5 lg:py-20">
+      <div className="land-split land-split-visit grid lg:grid-cols-12">
+        <div className="land-split-copy px-5 py-14 md:px-10 lg:col-span-5 lg:py-20">
           <p className="type-label text-gold">Contact</p>
-          <h2 className="type-section mt-4">Book the chair.</h2>
+          <h2 className="type-section mt-4">Book an appointment.</h2>
           <p className="type-body mt-6 max-w-md text-bone/85">
-            {status.label} Walk-ins are welcome when a chair is free. An appointment is the surer way.
+            {status.label} Walk-ins are welcome when a time is free. An appointment is the surer way.
           </p>
           <div className="mt-8">
             <BookButton>Book now</BookButton>
@@ -74,11 +74,11 @@ export function Visit() {
           </dl>
         </div>
 
-        <div className="min-h-[360px] border-t border-bone/15 lg:col-span-7 lg:min-h-[640px] lg:border-t-0 lg:border-l lg:border-bone/15">
+        <div className="land-split-media min-h-[18rem] border-t border-bone/15 lg:col-span-7 lg:min-h-[28rem] lg:border-t-0 lg:border-l lg:border-bone/15">
           <iframe
             title={`Map of ${addressLine}`}
             src={mapEmbedUrl}
-            className="h-full min-h-[360px] w-full grayscale invert contrast-[1.05] lg:min-h-[640px]"
+            className="map-embed h-full min-h-[18rem] w-full grayscale invert contrast-[1.05] lg:min-h-[28rem]"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
           />

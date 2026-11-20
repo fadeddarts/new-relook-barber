@@ -23,7 +23,7 @@ const icons = {
 
 export function SocialLinks({ className = "", compact = false }: { className?: string; compact?: boolean }) {
   return (
-    <ul className={`flex ${compact ? "items-center" : "flex-wrap gap-3"} ${className}`}>
+    <ul className={`flex ${compact ? "items-center gap-1" : "flex-wrap gap-3"} ${className}`}>
       {socials.map((social) => {
         const Icon = icons[social.id]
         return (

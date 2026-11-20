@@ -1,6 +1,6 @@
 export { barber } from "./team"
 export { chairShot, heroShot, introShot, lookbook, toolsShot } from "./gallery"
-export { priceLabel, services, timeLabel } from "./services"
+export { MAX_BOOKING_SERVICES, findService, findServices, priceLabel, services, timeLabel } from "./services"
 export {
   address,
   addressLine,

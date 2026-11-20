@@ -1,4 +1,4 @@
-import { brand, notifyWhatsappDigits } from "../data/shop.ts"
+import { notifyWhatsappDigits } from "../data/shop.ts"
 import { formatClock, formatDayLong } from "./time.ts"
 
 export function shopWhatsAppUrl(text: string) {
@@ -10,19 +10,21 @@ export function bookingWhatsAppText(input: {
   date: string
   startMinute: number
   durationMin: 30 | 60
+  services?: { name: string; price: number; time?: string | null }[]
 }) {
+  const picked = input.services ?? []
   return [
-    `Hello ${brand.name} — I want to book a chair.`,
+    "I want to book an appointment.",
+    "",
     `Name: ${input.name}`,
-    `When: ${formatDayLong(input.date)} · ${formatClock(input.startMinute)}`,
-    `Length: ${input.durationMin} min`,
-    "Please reply if that time works.",
+    ...picked.map((item) => `Service: ${item.name}`),
+    `${formatDayLong(input.date)} · ${formatClock(input.startMinute)}`,
   ].join("\n")
 }
 
 export function cancelWhatsAppText(input: { name: string; date: string; startMinute: number }) {
   return [
-    `Hello ${brand.name} — I need to cancel.`,
+    "I need to cancel.",
     `Name: ${input.name}`,
     `When: ${formatDayLong(input.date)} · ${formatClock(input.startMinute)}`,
   ].join("\n")

@@ -21,6 +21,61 @@ html {
   color-scheme: dark;
 }
 
+html.light {
+  --color-ink: #f4f1ea;
+  --color-bone: #161513;
+  --color-concrete: #6b6860;
+  color-scheme: light;
+}
+
+html.light .bg-gold {
+  --color-ink: #161513;
+}
+
+html.light .stroke-bone {
+  -webkit-text-stroke-color: #161513;
+}
+
+html.light .map-embed {
+  filter: none;
+}
+
+@media (min-width: 768px) and (orientation: landscape) {
+  .land-split {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .land-split.hero-land {
+    min-height: 0;
+  }
+
+  .land-split > .land-split-media {
+    order: 2;
+    grid-column: span 5 / span 5;
+    min-height: 0;
+    border-bottom-width: 0;
+    border-left-width: 12px;
+  }
+
+  .land-split > .land-split-copy {
+    order: 1;
+    grid-column: span 7 / span 7;
+  }
+
+  .land-split.hero-land > .land-split-copy {
+    padding-block: 3rem;
+  }
+
+  .land-split-visit > .land-split-copy {
+    grid-column: span 5 / span 5;
+  }
+
+  .land-split-visit > .land-split-media {
+    grid-column: span 7 / span 7;
+    border-left-width: 1px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -112,7 +167,7 @@ section[id] {
 .type-display {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(3.35rem, 8.2vw, 8rem);
+  font-size: 2.75rem;
   line-height: 0.86;
   letter-spacing: -0.045em;
   text-transform: uppercase;
@@ -121,7 +176,7 @@ section[id] {
 .type-section {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(2.5rem, 5.4vw, 4.75rem);
+  font-size: 2.35rem;
   line-height: 0.9;
   letter-spacing: -0.04em;
   text-transform: uppercase;
@@ -130,10 +185,34 @@ section[id] {
 .type-sub {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: clamp(1.45rem, 2vw, 1.85rem);
+  font-size: 1.45rem;
   line-height: 1.05;
   letter-spacing: -0.03em;
   text-transform: uppercase;
+}
+
+@media (min-width: 768px) {
+  .type-display {
+    font-size: 4rem;
+  }
+
+  .type-section {
+    font-size: 3.25rem;
+  }
+
+  .type-sub {
+    font-size: 1.65rem;
+  }
+}
+
+@media (min-width: 1100px) {
+  .type-display {
+    font-size: 4.75rem;
+  }
+
+  .type-section {
+    font-size: 3.75rem;
+  }
 }
 
 .type-body {

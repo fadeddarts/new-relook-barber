@@ -7,12 +7,19 @@ export function suggestedDuration(minutes: number): DurationMin {
 }
 
 export function durationForServiceName(name: string | null | undefined): DurationMin {
-  if (!name) return 60
-  const match = services.find((item) => item.name === name)
-  return suggestedDuration(match?.minutes ?? 60)
+  return durationForServices(name ? [name] : [])
+}
+
+export function durationForServices(names: string[]): DurationMin {
+  const minutes = names.reduce((sum, name) => {
+    const match = services.find((item) => item.name === name)
+    return sum + (match?.minutes ?? 0)
+  }, 0)
+  if (minutes <= 0) return 30
+  return suggestedDuration(minutes)
 }
 
 export const durationGuide = [
-  { length: "30 min", detail: "Beard trim, neck trim, hot towel, wash, waxing" },
-  { length: "60 min", detail: "Haircut, and haircut & beard" },
+  { length: "30 min", detail: "Haircut, beard trim, neck trim, wash, waxing" },
+  { length: "60 min", detail: "Haircut & beard" },
 ] as const

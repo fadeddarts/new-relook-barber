@@ -1,4 +1,4 @@
-import { useEffect, useId, useState, type FormEvent } from "react"
+import { useCallback, useEffect, useId, useState, type FormEvent } from "react"
 import { brand } from "../data"
 import {
   BookingError,
@@ -11,13 +11,17 @@ import {
   ownerSession,
   setOwnerCapacity,
 } from "../lib/bookingClient"
+import { boardGuideHref } from "../lib/route"
 import { MAX_CAPACITY, bookableDates, firstBookableDate, formatClock, formatDayLong } from "../lib/time"
 import type { DayAvailability, DurationMin, OwnerDay, OwnerTileChair } from "../lib/bookingTypes"
+import { useIdleTimeout } from "../lib/useIdleTimeout"
 import { DateStrip } from "./DateStrip"
 import { Nav } from "./Nav"
 
 const fieldClass =
   "mt-1.5 w-full border-b border-bone/25 bg-transparent py-2 font-sans text-base text-bone outline-none placeholder:text-bone/35 focus:border-gold"
+
+const IDLE_MS = 30 * 60 * 1000
 
 type Held = {
   id: string
@@ -60,6 +64,16 @@ export function OwnerBoard() {
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
 
+  const signOut = useCallback((reason?: string) => {
+    clearOwnerSession()
+    setAuthed(false)
+    setDay(null)
+    setAvail(null)
+    setError(reason ?? null)
+  }, [])
+
+  useIdleTimeout(authed, IDLE_MS, () => signOut("Signed out after 10 minutes idle."))
+
   useEffect(() => {
     document.title = authed ? `Board — ${brand.name}` : `Staff login — ${brand.name}`
     return () => {
@@ -86,8 +100,7 @@ export function OwnerBoard() {
       } catch (caught) {
         if (cancelled) return
         if (caught instanceof BookingError && caught.status === 401) {
-          clearOwnerSession()
-          setAuthed(false)
+          signOut()
           return
         }
         setError(caught instanceof BookingError ? caught.message : "Could not load the board.")
@@ -99,7 +112,7 @@ export function OwnerBoard() {
       cancelled = true
       window.clearInterval(timer)
     }
-  }, [authed, date, duration])
+  }, [authed, date, duration, signOut])
 
   async function login(event: FormEvent) {
     event.preventDefault()
@@ -125,7 +138,7 @@ export function OwnerBoard() {
       setAvail(await fetchDay(date))
       setError(null)
     } catch (caught) {
-      setError(caught instanceof BookingError ? caught.message : "Could not change chairs.")
+      setError(caught instanceof BookingError ? caught.message : "Could not change how many we take.")
     } finally {
       setBusy(false)
     }
@@ -146,7 +159,7 @@ export function OwnerBoard() {
       setName("Walk-in")
       setError(null)
     } catch (caught) {
-      setError(caught instanceof BookingError ? caught.message : "Could not mark that time.")
+      setError(caught instanceof BookingError ? caught.message : "Could not add that appointment.")
     } finally {
       setBusy(false)
     }
@@ -179,6 +192,11 @@ export function OwnerBoard() {
             Staff login
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-bone/70">Enter the PIN.</p>
+          <p className="mt-3">
+            <a href={boardGuideHref()} className="type-label text-gold">
+              How to use the board
+            </a>
+          </p>
           <form className="mt-8" onSubmit={login}>
             <label className="block" htmlFor={`${baseId}-pin`}>
               <span className="type-label">PIN</span>
@@ -197,7 +215,7 @@ export function OwnerBoard() {
             <button
               type="submit"
               disabled={busy}
-              className="type-button mt-8 inline-flex h-11 w-full items-center justify-center bg-gold text-ink"
+              className="type-button mt-8 inline-flex h-12 w-full items-center justify-center bg-gold text-ink"
             >
               Log in
             </button>
@@ -210,39 +228,43 @@ export function OwnerBoard() {
   return (
     <div className="min-h-svh bg-ink text-bone">
       <Nav standalone />
-      <main className="mx-auto max-w-5xl px-5 py-6 md:px-8 md:py-8">
-        <div className="flex items-start justify-between gap-4">
-          <p className="type-label">Shop board</p>
-          <button
-            type="button"
-            className="type-button inline-flex min-h-11 shrink-0 items-center px-4 text-bone/55 transition-colors hover:text-bone"
-            onClick={() => {
-              clearOwnerSession()
-              setAuthed(false)
-              setDay(null)
-            }}
-          >
-            Logout
-          </button>
+      <main className="mx-auto max-w-6xl px-4 py-5 sm:px-6 lg:px-8 lg:py-8">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <p className="type-label">Appointments</p>
+          <div className="flex flex-wrap items-center gap-2">
+            <a
+              href={boardGuideHref()}
+              className="type-label inline-flex min-h-11 items-center px-3 text-bone/55 hover:text-bone"
+            >
+              How to use
+            </a>
+            <button
+              type="button"
+              className="type-button inline-flex min-h-11 shrink-0 items-center px-4 text-bone/55 transition-colors hover:text-bone"
+              onClick={() => signOut()}
+            >
+              Logout
+            </button>
+          </div>
         </div>
-        <h1 className="mt-2 font-display text-[clamp(1.85rem,4vw,2.75rem)] leading-[0.95] font-bold tracking-[-0.04em] uppercase">
-          Mark a time.
+        <h1 className="mt-2 font-display text-[clamp(1.7rem,4vw,2.6rem)] leading-[0.95] font-bold tracking-[-0.04em] uppercase">
+          Add an appointment.
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-bone/70">
-          Same grid as the booker. A time leaves the public page only when every chair at that time is marked. Two
-          chairs means two names before 11:00 disappears. Remove a name from the list on the right.
+          After you reply OK on WhatsApp, put the name on a time. That time stays on Book until every
+          opening is filled. Idle 30 minutes and this screen signs out.
         </p>
 
-        <div className="mt-6 grid items-start gap-8 md:grid-cols-[minmax(0,1fr)_16rem]">
+        <div className="mt-6 grid items-start gap-8 md:landscape:grid-cols-[minmax(0,1fr)_20rem] lg:grid-cols-[minmax(0,1fr)_20rem]">
           <div className="min-w-0">
-            <p className="type-label">How long</p>
-            <div className="mt-2 grid max-w-[20rem] grid-cols-2 gap-2">
+            <p className="type-label">1 · How long</p>
+            <div className="mt-2 grid max-w-[24rem] grid-cols-2 gap-2">
               {([30, 60] as const).map((item) => (
                 <button
                   key={item}
                   type="button"
                   onClick={() => setDuration(item)}
-                  className={`h-10 w-full border font-display text-sm tracking-wide ${
+                  className={`h-12 w-full border font-display text-sm tracking-wide ${
                     duration === item ? "border-gold bg-gold text-ink" : "border-bone/20 text-bone"
                   }`}
                 >
@@ -251,18 +273,18 @@ export function OwnerBoard() {
               ))}
             </div>
 
-            <p className="type-label mt-6">Day</p>
+            <p className="type-label mt-6">2 · Day</p>
             <div className="mt-2">
-              <DateStrip wrap dates={dates} value={date} onChange={setDate} />
+              <DateStrip wrap tall dates={dates} value={date} onChange={setDate} />
             </div>
 
-            <p className="type-label mt-6">Open times</p>
+            <p className="type-label mt-6">3 · Time</p>
             {!avail ? (
-              <p className="mt-2 text-sm text-bone/65">Checking the board…</p>
+              <p className="mt-2 text-sm text-bone/65">Checking open times…</p>
             ) : slots.length === 0 ? (
               <p className="mt-2 text-sm text-bone/65">No {duration}-minute times left this day.</p>
             ) : (
-              <div className="mt-2 grid grid-cols-3 gap-1.5 sm:grid-cols-4">
+              <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-5">
                 {slots.map((slot) => {
                   const selected = startMinute === slot.minute
                   return (
@@ -270,13 +292,13 @@ export function OwnerBoard() {
                       key={slot.minute}
                       type="button"
                       onClick={() => setStartMinute(slot.minute)}
-                      className={`flex h-12 flex-col items-center justify-center border px-1 font-sans leading-none ${
+                      className={`flex min-h-14 flex-col items-center justify-center border px-1 font-sans leading-none ${
                         selected ? "border-gold bg-gold text-ink" : "border-bone/20 text-bone"
                       }`}
                     >
-                      <span className="text-[13px]">{formatClock(slot.minute)}</span>
+                      <span className="text-[15px]">{formatClock(slot.minute)}</span>
                       <span className={`mt-0.5 text-[10px] ${selected ? "text-ink/70" : "text-bone/50"}`}>
-                        {slot.open} {slot.open === 1 ? "chair" : "chairs"} left
+                        {slot.open} {slot.open === 1 ? "opening" : "openings"} left
                       </span>
                     </button>
                   )
@@ -285,9 +307,9 @@ export function OwnerBoard() {
             )}
           </div>
 
-          <div className="grid gap-5 md:sticky md:top-6">
+          <div className="grid gap-5 lg:sticky lg:top-6">
             <label className="block" htmlFor={`${baseId}-name`}>
-              <span className="type-label">Name</span>
+              <span className="type-label">4 · Name</span>
               <input
                 id={`${baseId}-name`}
                 className={fieldClass}
@@ -298,22 +320,23 @@ export function OwnerBoard() {
               />
             </label>
             <div>
-              <p className="type-label">Chairs working</p>
+              <p className="type-label">How many we can take</p>
+              <p className="mt-1 text-xs text-bone/50">Barbers working this day. Default is 2.</p>
               <div className="mt-2 grid grid-cols-3 gap-2">
                 <button
                   type="button"
-                  className="type-button h-10 border border-bone/20"
+                  className="type-button h-12 border border-bone/20"
                   disabled={!day || busy}
                   onClick={() => void changeCapacity(capacity - 1)}
                 >
                   −
                 </button>
-                <p className="flex h-10 items-center justify-center border border-bone/20 font-display text-sm">
+                <p className="flex h-12 items-center justify-center border border-bone/20 font-display text-base">
                   {capacity}
                 </p>
                 <button
                   type="button"
-                  className="type-button h-10 border border-bone/20"
+                  className="type-button h-12 border border-bone/20"
                   disabled={!day || busy}
                   onClick={() => void changeCapacity(capacity + 1)}
                 >
@@ -326,20 +349,20 @@ export function OwnerBoard() {
               type="button"
               disabled={busy}
               onClick={() => void mark()}
-              className="type-button inline-flex h-11 w-full items-center justify-center bg-gold px-5 text-ink disabled:opacity-60"
+              className="type-button inline-flex h-12 w-full items-center justify-center bg-gold px-5 text-ink disabled:opacity-60"
             >
-              {busy ? "Updating…" : "Mark this time"}
+              {busy ? "Adding…" : "Add to board"}
             </button>
 
             <div>
-              <p className="type-label">On the board</p>
+              <p className="type-label">Today’s appointments</p>
               <p className="mt-1 text-xs text-bone/50">{formatDayLong(date)}</p>
               {held.length === 0 ? (
-                <p className="mt-3 text-sm text-bone/60">No names this day yet.</p>
+                <p className="mt-3 text-sm text-bone/60">None yet this day.</p>
               ) : (
                 <ul className="mt-3 grid gap-2">
                   {held.map((row) => (
-                    <li key={row.id} className="border border-bone/20 px-3 py-2">
+                    <li key={row.id} className="border border-bone/20 px-3 py-3">
                       <p className="text-sm leading-snug">
                         {formatClock(row.minute)} · {row.name} · {row.durationMin} min
                       </p>
@@ -347,7 +370,7 @@ export function OwnerBoard() {
                         type="button"
                         disabled={busy}
                         onClick={() => void drop(row.id)}
-                        className="type-label mt-2 text-gold disabled:opacity-50"
+                        className="type-label mt-2 min-h-10 text-gold disabled:opacity-50"
                       >
                         Remove
                       </button>

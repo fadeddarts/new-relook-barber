@@ -11,12 +11,14 @@ export function Services() {
             <h2 className="type-section mt-3">The menu.</h2>
           </div>
           <p className="type-body max-w-sm text-bone/70">
-            Prices in Canadian dollars, plus tax. Sunday chairs finish at 6 p.m.
+            Prices in Canadian dollars, plus tax. Sunday appointments finish at 6 p.m.
           </p>
         </Reveal>
 
         <ul>
-          {services.map((service) => (
+          {services.map((service) => {
+            const time = timeLabel(service)
+            return (
             <li key={service.id} className="border-b border-bone/15 py-7 md:py-9">
               <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
                 <p className="order-1 bg-gold px-2 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-none tracking-[-0.04em] text-ink">
@@ -35,14 +37,21 @@ export function Services() {
               <div className="mt-4 md:pl-[4.5rem]">
                 <p className="type-body max-w-xl text-bone/70">{service.description}</p>
                 <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
-                  <p className="type-label text-bone/55">{timeLabel(service.minutes)}</p>
+                  {time ? (
+                    <p className="font-display text-[1.25rem] leading-none tracking-[-0.03em] text-bone/80 md:text-[1.5rem]">
+                      {time}
+                    </p>
+                  ) : (
+                    <span />
+                  )}
                   <BookButton service={service.name} variant="line" className="min-h-11">
                     Book
                   </BookButton>
                 </div>
               </div>
             </li>
-          ))}
+            )
+          })}
         </ul>
       </div>
     </section>

@@ -7,7 +7,7 @@ export function Barbers() {
     <section id="barbers" className="bg-ink text-bone">
       <div className="grid lg:grid-cols-12">
         <Frame className="lg:col-span-6">
-          <div className="aspect-[4/5] lg:aspect-auto lg:h-full lg:min-h-[640px]">
+          <div className="aspect-[4/5]">
             <img
               src={chairShot.src}
               alt={chairShot.alt}
