@@ -8,8 +8,6 @@ import {
   notifyPhoneDisplay,
   phoneDisplay,
   phoneHref,
-  priceLabel,
-  services,
   timeLabel,
 } from "../data"
 import { fetchDay } from "../lib/bookingClient"
@@ -20,12 +18,10 @@ import type { DayAvailability, SlotOpen } from "../lib/bookingTypes"
 import { bookingWhatsAppText, shopWhatsAppUrl } from "../lib/whatsapp"
 import { DateStrip } from "./DateStrip"
 import { Nav } from "./Nav"
+import { ServicePickers, ServiceTimeNotes } from "./ServicePickers"
 
 const fieldClass =
   "mt-1.5 w-full border-b border-bone/25 bg-transparent py-2 font-sans text-base text-bone outline-none focus:border-gold"
-
-const selectClass =
-  "mt-1.5 h-12 w-full border border-bone/20 bg-ink px-3 font-sans text-base text-bone outline-none focus:border-gold"
 
 function presetService() {
   return new URLSearchParams(window.location.search).get("service")
@@ -51,7 +47,6 @@ export function BookPage() {
 
   const picked = findServices(serviceNames)
   const duration = durationForServices(picked.map((item) => item.name))
-  const together = picked.reduce((sum, item) => sum + item.price, 0)
 
   useEffect(() => {
     document.title = `Book — ${brand.name}`
@@ -169,79 +164,15 @@ export function BookPage() {
             />
           </Field>
 
-          <div className="grid gap-4">
-            {serviceNames.map((value, index) => {
-              const taken = serviceNames.filter((name, other) => other !== index && name)
-              const choices = services.filter((item) => item.name === value || !taken.includes(item.name))
-              const fieldId = `${baseId}-service-${index}`
-              return (
-                <div key={fieldId}>
-                  <div className="flex items-end gap-3">
-                    <label className="block min-w-0 flex-1" htmlFor={fieldId}>
-                      <span className="type-label">{index === 0 ? "Service" : "Added service"}</span>
-                      <select
-                        id={fieldId}
-                        className={selectClass}
-                        value={value}
-                        onChange={(event) => setServiceAt(index, event.target.value)}
-                        aria-invalid={index === 0 ? Boolean(errors.service) : undefined}
-                      >
-                        <option value="">{index === 0 ? "Choose a service" : "Choose another service"}</option>
-                        {choices.map((item) => (
-                          <option key={item.id} value={item.name}>
-                            {item.name} · {priceLabel(item.price)}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                    {index > 0 ? (
-                      <button
-                        type="button"
-                        role="switch"
-                        aria-checked={true}
-                        aria-label="Remove this service"
-                        onClick={() => removeService(index)}
-                        className="type-label mb-0 inline-flex h-12 shrink-0 items-center border border-gold bg-gold px-3 text-ink"
-                      >
-                        Remove
-                      </button>
-                    ) : null}
-                  </div>
-                </div>
-              )
-            })}
-            {serviceNames.length < MAX_BOOKING_SERVICES && serviceNames.every(Boolean) ? (
-              <button
-                type="button"
-                role="switch"
-                aria-checked={false}
-                onClick={addService}
-                className="type-label inline-flex h-12 items-center justify-center border border-bone/25 px-3 text-bone"
-              >
-                Add a service
-              </button>
-            ) : null}
-            {errors.service ? <span className="text-sm text-gold">{errors.service}</span> : null}
-          </div>
-
-          {picked.length > 0 ? (
-            <div className="grid gap-2">
-              {picked.map((item) => {
-                const approx = timeLabel(item)
-                return (
-                  <p
-                    key={item.id}
-                    className="font-display text-[1.25rem] leading-none tracking-[-0.03em] text-bone/80 md:text-[1.5rem]"
-                  >
-                    {approx ? `${item.name} · about ${approx}` : item.name}
-                  </p>
-                )
-              })}
-              {picked.length > 1 ? (
-                <p className="text-sm text-bone/65">Together {priceLabel(together)} + tax</p>
-              ) : null}
-            </div>
-          ) : null}
+          <ServicePickers
+            idPrefix={baseId}
+            values={serviceNames}
+            onChangeAt={setServiceAt}
+            onAdd={addService}
+            onRemove={removeService}
+            error={errors.service}
+          />
+          <ServiceTimeNotes picked={picked} />
 
           <div>
             <p className="type-label">Day</p>

@@ -54,7 +54,7 @@ export const services: Service[] = [
     index: "05",
     name: "Hot Towel with Face Mask",
     description: "A hot towel and a face mask at the chair.",
-    minutes: 15,
+    minutes: 0,
     price: 10,
   },
   {
@@ -62,7 +62,7 @@ export const services: Service[] = [
     index: "06",
     name: "Hot Towel Only",
     description: "A hot towel at the chair, on its own.",
-    minutes: 10,
+    minutes: 0,
     price: 5,
   },
   {

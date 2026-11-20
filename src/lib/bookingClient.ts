@@ -61,7 +61,13 @@ export function setOwnerCapacity(date: string, capacity: number) {
   })
 }
 
-export function ownerBlock(input: { date: string; startMinute: number; durationMin: DurationMin; name?: string }) {
+export function ownerBlock(input: {
+  date: string
+  startMinute: number
+  durationMin: DurationMin
+  name?: string
+  services?: string[]
+}) {
   return request<OwnerDay>("/owner/block", { method: "POST", body: JSON.stringify(input) })
 }
 

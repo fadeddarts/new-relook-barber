@@ -2,8 +2,8 @@ import { randomBytes, randomUUID } from "node:crypto"
 import { mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs"
 import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
-import { MAX_CAPACITY, bookableDates, hasStarted, hoursForDate, isWithin24Hours, slotEnded } from "../src/lib/time.ts"
-import { availableStarts, dayCapacity, findFreeChair, freeChairCount, occupancyTiles, startMinutesFor } from "../src/lib/slots.ts"
+import { DEFAULT_CAPACITY, MAX_CAPACITY, bookableDates, hasStarted, hoursForDate, isWithin24Hours, slotEnded } from "../src/lib/time.ts"
+import { availableStarts, findFreeChair, freeChairCount, occupancyTiles, startMinutesFor } from "../src/lib/slots.ts"
 import { displayPhone, normalizePhone } from "../src/lib/phone.ts"
 import { normalizeEmail } from "../src/lib/email.ts"
 import { customerBookSms, customerCancelSms, ownerBookSms, ownerCancelSms } from "../src/lib/smsCopy.ts"
@@ -23,6 +23,7 @@ import type {
 } from "../src/lib/bookingTypes.ts"
 
 type StoreFile = {
+  defaultCapacity?: number
   days: Record<string, { capacity: number }>
   appointments: Appointment[]
   occupancy: OccupancyRow[]
@@ -34,7 +35,23 @@ const ownerPin = process.env.OWNER_PIN || "4821"
 const sessionMs = 1000 * 60 * 60 * 24 * 30
 
 function empty(): StoreFile {
-  return { days: {}, appointments: [], occupancy: [], sessions: [] }
+  return { defaultCapacity: DEFAULT_CAPACITY, days: {}, appointments: [], occupancy: [], sessions: [] }
+}
+
+function shopDefault(store: StoreFile) {
+  const n = store.defaultCapacity ?? DEFAULT_CAPACITY
+  if (!Number.isInteger(n) || n < 1 || n > MAX_CAPACITY) return DEFAULT_CAPACITY
+  return n
+}
+
+function occupancyNeed(store: StoreFile, date: string) {
+  const occ = occupancyOf(store, date)
+  if (occ.length === 0) return 0
+  return occ.reduce((max, row) => Math.max(max, row.chairIndex), -1) + 1
+}
+
+function capacityFor(store: StoreFile, date: string) {
+  return Math.max(shopDefault(store), occupancyNeed(store, date))
 }
 
 function load(): StoreFile {
@@ -43,8 +60,10 @@ function load(): StoreFile {
     parsed.appointments = (parsed.appointments ?? []).map((item) => ({
       ...item,
       customerEmail: item.customerEmail ?? null,
+      services: Array.isArray(item.services) ? item.services : null,
     }))
     parsed.sessions = (parsed.sessions ?? []).filter((session) => session.expiresAt > Date.now())
+    parsed.defaultCapacity = shopDefault(parsed)
     return parsed
   } catch {
     return empty()
@@ -113,10 +132,11 @@ function takeChair(
     name: string | null
     phone: string | null
     email: string | null
+    services?: string[] | null
     withToken: boolean
   },
 ) {
-  const cap = dayCapacity(store.days, input.date)
+  const cap = capacityFor(store, input.date)
   const occ = occupancyOf(store, input.date)
   const chairIndex = findFreeChair(occ, input.date, cap, input.startMinute, input.durationMin)
   if (chairIndex === null) {
@@ -134,6 +154,7 @@ function takeChair(
     customerName: input.name,
     customerPhone: input.phone,
     customerEmail: input.email,
+    services: input.services?.length ? input.services : null,
     cancelToken,
     status: "booked",
   }
@@ -148,7 +169,7 @@ function takeChair(
 export function getDay(date: string): DayAvailability {
   assertDate(date)
   const store = load()
-  const capacity = dayCapacity(store.days, date)
+  const capacity = capacityFor(store, date)
   const occ = occupancyOf(store, date)
   const hours = hoursForDate(date)
   const slots30 = startMinutesFor(date, 30)
@@ -375,7 +396,7 @@ export function ownerDay(sessionId: string | undefined, date: string): OwnerDay 
   assertDate(date)
   const store = load()
   requireSession(store, sessionId)
-  const capacity = dayCapacity(store.days, date)
+  const capacity = capacityFor(store, date)
   const hours = hoursForDate(date)
   const occ = occupancyOf(store, date)
   const byId = new Map(active(store).map((item) => [item.id, item]))
@@ -394,12 +415,20 @@ export function ownerDay(sessionId: string | undefined, date: string): OwnerDay 
         source: appointment.source,
         startMinute: appointment.startMinute,
         durationMin: appointment.durationMin,
+        services: appointment.services ?? null,
         continuation: appointment.startMinute !== minute,
       }
     })
     return { minute, chairs }
   })
-  return { date, capacity, openMinute: hours.openMinute, closeMinute: hours.closeMinute, tiles }
+  return {
+    date,
+    capacity,
+    defaultCapacity: shopDefault(store),
+    openMinute: hours.openMinute,
+    closeMinute: hours.closeMinute,
+    tiles,
+  }
 }
 
 export function setCapacity(sessionId: string | undefined, date: string, capacity: number) {
@@ -409,23 +438,15 @@ export function setCapacity(sessionId: string | undefined, date: string, capacit
   }
   const store = load()
   requireSession(store, sessionId)
-  const occ = occupancyOf(store, date)
-  const maxChair = occ.reduce((max, row) => Math.max(max, row.chairIndex), -1)
-  const minAllowed = maxChair + 1
-  if (capacity < minAllowed) {
-    throw Object.assign(new Error("CAPACITY"), {
-      status: 400,
-      message: `Can't drop below ${minAllowed} while those chairs still have times taken. Free a chair first.`,
-    })
-  }
-  store.days[date] = { capacity }
+  store.defaultCapacity = capacity
+  store.days = {}
   save(store)
   return ownerDay(sessionId, date)
 }
 
 export function blockSlot(
   sessionId: string | undefined,
-  input: { date: string; startMinute: number; durationMin: DurationMin; name?: string },
+  input: { date: string; startMinute: number; durationMin: DurationMin; name?: string; services?: string[] },
 ) {
   assertSlot(input.date, input.startMinute, input.durationMin, "owner")
   const store = load()
@@ -438,6 +459,7 @@ export function blockSlot(
     name: input.name?.trim() || "Walk-in",
     phone: null,
     email: null,
+    services: input.services,
     withToken: false,
   })
   save(store)

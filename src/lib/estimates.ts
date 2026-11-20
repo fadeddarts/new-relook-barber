@@ -13,7 +13,8 @@ export function durationForServiceName(name: string | null | undefined): Duratio
 export function durationForServices(names: string[]): DurationMin {
   const minutes = names.reduce((sum, name) => {
     const match = services.find((item) => item.name === name)
-    return sum + (match?.minutes ?? 0)
+    if (!match?.time || match.minutes <= 0) return sum
+    return sum + match.minutes
   }, 0)
   if (minutes <= 0) return 30
   return suggestedDuration(minutes)

@@ -88,6 +88,9 @@ export async function handleBooking(req: IncomingMessage, res: ServerResponse) {
           startMinute: Number(body.startMinute),
           durationMin: assertDuration(Number(body.durationMin)),
           name: typeof body.name === "string" ? body.name : undefined,
+          services: Array.isArray(body.services)
+            ? body.services.filter((item): item is string => typeof item === "string" && item.trim().length > 0)
+            : undefined,
         }),
       )
     }

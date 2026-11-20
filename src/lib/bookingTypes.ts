@@ -12,6 +12,7 @@ export type Appointment = {
   customerName: string | null
   customerPhone: string | null
   customerEmail: string | null
+  services: string[] | null
   cancelToken: string | null
   status: AppointmentStatus
 }
@@ -50,12 +51,14 @@ export type OwnerTileChair =
       source: BookingSource
       startMinute: number
       durationMin: DurationMin
+      services: string[] | null
       continuation: boolean
     }
 
 export type OwnerDay = {
   date: string
   capacity: number
+  defaultCapacity: number
   openMinute: number
   closeMinute: number
   tiles: { minute: number; chairs: OwnerTileChair[] }[]

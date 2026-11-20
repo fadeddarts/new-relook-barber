@@ -16,13 +16,10 @@ export const smsHref = "sms:+16472223540"
 export const phoneE164 = "+16472223540"
 export const whatsappDigits = "16472223540"
 
-/**
- * Booking WhatsApp. TEST number (647) 686-0975.
- * Change back to the shop before live: (647) 222-3540 / 16472223540.
- */
-export const notifyPhoneDisplay = "(647) 686-0975"
-export const notifyPhoneE164 = "+16476860975"
-export const notifyWhatsappDigits = "16476860975"
+/** Booking WhatsApp — shop number. */
+export const notifyPhoneDisplay = phoneDisplay
+export const notifyPhoneE164 = phoneE164
+export const notifyWhatsappDigits = whatsappDigits
 
 export const address = {
   street: "1054 Eglinton Ave W",
